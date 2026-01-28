@@ -1,14 +1,12 @@
-// Function: FN_CREATE_CUSTOMER_REQUEST
+// Function: FN_CHECK_REQUEST_STATUS
 // Returns a String[]:
 //   result[0] = response code as string
 //   result[1] = response body as string (for logging)
 // Uses process variables:
-//   #FN_CUSTOMER_CREATE
 //   #CN_URL_IABS
 //   #IN_GET_CUSTOMER_REQUESTID
 //   #IN_GET_CUSTOMER_TOKEN
 
-String jsonString = #FN_CUSTOMER_CREATE;
 String baseUrl = #CN_URL_IABS;
 String requestId = "create_cust_" + #IN_GET_CUSTOMER_REQUESTID;
 String token = #IN_GET_CUSTOMER_TOKEN;
@@ -18,22 +16,15 @@ result[1] = "";
 
 javax.net.ssl.HttpsURLConnection connection = null;
 try {
-    URL url = new URL(baseUrl + "/1.0.0/create-customer");
+    URL url = new URL(baseUrl + "/1.0.0/check-request/" + requestId);
     connection = (javax.net.ssl.HttpsURLConnection) url.openConnection();
     connection.setConnectTimeout(10000);
     connection.setReadTimeout(90000);
-    connection.setRequestMethod("POST");
-    connection.setDoOutput(true);
+    connection.setRequestMethod("GET");
     connection.setRequestProperty("accept", "application/json");
     connection.setRequestProperty("requestId", requestId);
     connection.setRequestProperty("Accept-Language", "en");
     connection.setRequestProperty("Authorization", "Bearer " + token);
-    connection.setRequestProperty("Content-Type", "application/json");
-
-    java.io.OutputStream os = connection.getOutputStream();
-    byte[] input = jsonString.getBytes("utf-8");
-    os.write(input, 0, input.length);
-    os.close();
 
     int responseCode = connection.getResponseCode();
 
