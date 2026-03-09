@@ -1,0 +1,11 @@
+// Example caller logic (process-level code)
+
+String[] createResult = #FN_CREATE_CUSTOMER_REQUEST;
+String createCode = createResult[0];
+String createBody = createResult[1]; // for logging
+
+if ("202".equals(createCode)) {
+    String[] checkResult = #FN_CHECK_REQUEST_STATUS;
+    String checkCode = checkResult[0];
+    String checkBody = checkResult[1]; // for logging
+}
